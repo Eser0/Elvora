@@ -135,8 +135,9 @@ if process_btn:
         progress = st.progress(0)
         
         try:
-            for f in ["analiz.mp3", "raw.mp4", "elvora_final.mp4"]:
-                if os.path.exists(f): os.remove(f)
+            for f in ["analiz.mp3", "indirilen_video.mp4", "elvora_final.mp4"]:
+                if os.path.exists(f): 
+                    os.remove(f)
 
             status.markdown(f"🧬 **{user_tier}** motoru devrede. AI videoyu dinliyor...")
             progress.progress(15)
@@ -144,12 +145,10 @@ if process_btn:
             with yt_dlp.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': 'analiz', 'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3'}]}) as ydl:
                 ydl.download([url])
             
-            result = model.transcribe("analiz.mp3")
-            
             status.markdown(f"📥 **{quality}p** görüntü akışı indiriliyor...")
             progress.progress(45)
             
-ydl_opts {
+            ydl_opts = {
                 'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
                 'outtmpl': 'indirilen_video.mp4',
                 'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
