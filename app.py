@@ -111,12 +111,14 @@ if process_btn:
             progress.progress(45)
             
             ydl_opts = {
-                'format': f'bestvideo[height<={quality}]+bestaudio/best',
-                'outtmpl': 'raw.mp4',
-                'download_ranges': yt_dlp.utils.download_range_func(None, [(en_iyi_start, en_iyi_start + duration)]),
-                'force_keyframes_at_cuts': True,
-                'merge_output_format': 'mp4'
+    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+    'outtmpl': 'indirilen_video.mp4',
+    'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+    'quiet': True,
+    'no_warnings': True,
+    'nocheckcertificate': True,
             }
+            
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
