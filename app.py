@@ -7,24 +7,94 @@ import subprocess
 # --- ELVORA AI ENTERPRISE THEME ---
 st.set_page_config(page_title="Elvora AI | Next-Gen Shorts Platform", page_icon="💎", layout="wide")
 
-# Özel CSS: Her plan için ayrı renk paleti ve premium efektler
+# LÜKS & AKICI TASARIM (DARK LUXURY CSS)
 st.markdown("""
     <style>
-    .stApp { background-color: #050505; color: #e0e0e0; font-family: 'Inter', sans-serif; }
-    [data-testid="stSidebar"] { background-color: #080808; border-right: 1px solid #1a1a1a; }
+    /* Ana Arka Plan ve Tipografi */
+    .stApp { 
+        background: radial-gradient(circle at 50% 0%, #111116 0%, #050508 100%); 
+        color: #f1f5f9; 
+        font-family: 'Inter', sans-serif; 
+    }
     
-    /* Başlık ve Logo */
-    .brand-title { font-size: 42px; font-weight: 900; background: linear-gradient(90deg, #ff4b2b, #ff416c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 0px; }
+    /* Yan Panel (Sidebar) Tasarımı */
+    [data-testid="stSidebar"] { 
+        background-color: #07070a; 
+        border-right: 1px solid rgba(255, 255, 255, 0.05); 
+    }
     
-    /* Plan Kartları Tasarımı */
-    .plan-box { padding: 20px; border-radius: 15px; border: 1px solid #222; background: #0c0c0c; margin-bottom: 20px; transition: 0.3s; }
-    .nano-border { border-left: 5px solid #888; }
-    .flash-border { border-left: 5px solid #00c6ff; box-shadow: 0 0 15px rgba(0, 198, 255, 0.1); }
-    .ultra-border { border-left: 5px solid #ff4b2b; box-shadow: 0 0 20px rgba(255, 75, 75, 0.2); }
+    /* Başlık ve Logo Efekti */
+    .brand-title { 
+        font-size: 48px; 
+        font-weight: 900; 
+        background: linear-gradient(135deg, #ffffff 0%, #ff4b2b 50%, #ff416c 100%); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        text-align: center; 
+        letter-spacing: -1px;
+        margin-bottom: 5px;
+    }
     
-    /* Buton Tasarımı */
-    .stButton>button { width: 100%; height: 50px; border-radius: 10px; background: linear-gradient(45deg, #222, #333); color: white; border: none; font-weight: bold; font-size: 16px; transition: 0.4s; }
-    .stButton>button:hover { background: linear-gradient(45deg, #ff416c, #ff4b2b); transform: scale(1.02); box-shadow: 0 5px 15px rgba(255, 75, 75, 0.4); }
+    .brand-subtitle {
+        text-align: center; 
+        color: #888896; 
+        font-size: 15px;
+        letter-spacing: 1px;
+        margin-bottom: 30px;
+    }
+    
+    /* VIP Plan Kartları */
+    .plan-box { 
+        padding: 18px; 
+        border-radius: 14px; 
+        border: 1px solid rgba(255, 255, 255, 0.08); 
+        background: rgba(18, 18, 24, 0.6); 
+        backdrop-filter: blur(10px);
+        margin-bottom: 15px; 
+        transition: all 0.3s ease; 
+    }
+    .plan-box:hover {
+        transform: translateY(-3px);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+    .nano-border { border-left: 4px solid #71717a; }
+    .flash-border { border-left: 4px solid #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1); }
+    .ultra-border { border-left: 4px solid #f43f5e; box-shadow: 0 0 25px rgba(244, 63, 94, 0.15); }
+    
+    /* Akıcı Buton Tasarımı */
+    .stButton>button { 
+        width: 100%; 
+        height: 52px; 
+        border-radius: 12px; 
+        background: linear-gradient(135deg, #181824 0%, #09090f 100%); 
+        color: #ffffff; 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        font-weight: 700; 
+        font-size: 16px; 
+        letter-spacing: 0.5px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    }
+    .stButton>button:hover { 
+        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); 
+        border-color: transparent;
+        transform: translateY(-2px); 
+        box-shadow: 0 8px 25px rgba(255, 75, 75, 0.35); 
+    }
+    
+    /* Input (Link Kutusu) Tasarımı */
+    .stTextInput>div>div>input {
+        background-color: rgba(18, 18, 24, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        border-radius: 12px;
+        padding: 14px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+    }
+    .stTextInput>div>div>input:focus {
+        border-color: #ff4b2b;
+        box-shadow: 0 0 15px rgba(255, 75, 75, 0.2);
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -37,7 +107,8 @@ model = load_ai()
 
 # --- SIDEBAR: ÜYELİK VE PLAN YÖNETİMİ ---
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center;'>👑 Üyelik Paneli</h2>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: center; font-weight: 800; color: #fff;'>👑 ÜYELİK PANELİ</h2>", unsafe_allow_html=True)
+    st.write("")
     
     user_tier = st.selectbox(
         "Mevcut Lisansınız:",
@@ -48,30 +119,31 @@ with st.sidebar:
     
     if user_tier == "Elvora Nano-2 (Ücretsiz)":
         st.markdown("""<div class='plan-box nano-border'>
-            <h3 style='color:#888;'>NANO-2</h3>
-            <p>• Günlük 2 Video Hakkı<br>• 720p Standart Kalite<br>• 30 Saniye Kısıtlı</p>
+            <h4 style='color:#a1a1aa; margin:0 0 8px 0;'>NANO-2</h4>
+            <p style='font-size:13px; color:#a1a1aa; margin:0;'>• Günlük 2 Video Hakkı<br>• 720p Standart Kalite<br>• 30 Saniye Kısıtlı</p>
             </div>""", unsafe_allow_html=True)
         quality, duration, crf, threads = "720", 30, "26", 2
     
     elif user_tier == "Elvora Flash-2 (Special)":
         st.markdown("""<div class='plan-box flash-border'>
-            <h3 style='color:#00c6ff;'>FLASH-2</h3>
-            <p>• Aylık Kullanım Hakkı<br>• 1080p Yüksek Kalite<br>• 60 Saniye Süre<br>• Hızlı Render</p>
+            <h4 style='color:#06b6d4; margin:0 0 8px 0;'>FLASH-2</h4>
+            <p style='font-size:13px; color:#a1a1aa; margin:0;'>• Aylık Sınırsız Kullanım<br>• 1080p Yüksek Kalite<br>• 60 Saniye Süre<br>• Hızlı Render</p>
             </div>""", unsafe_allow_html=True)
         quality, duration, crf, threads = "1080", 60, "20", 4
         
     else: # VIP ULTRA
         st.markdown("""<div class='plan-box ultra-border'>
-            <h3 style='color:#ff4b2b;'>ULTRA-2 VIP</h3>
-            <p>• Sınırsız Kullanım Hakı<br>• 1080p Ultra Kalite<br>• 90 Saniye Süre<br>• Maksimum AI İşlemci</p>
+            <h4 style='color:#f43f5e; margin:0 0 8px 0;'>ULTRA-2 VIP</h4>
+            <p style='font-size:13px; color:#a1a1aa; margin:0;'>• Sınırsız Öncelikli Hak<br>• 1080p Ultra Kalite<br>• 90 Saniye Süre<br>• Maksimum AI İşlemci</p>
             </div>""", unsafe_allow_html=True)
         quality, duration, crf, threads = "1080", 90, "17", 8
 
+# --- ANA EKRAN ---
 st.markdown("<div class='brand-title'>ELVORA AI</div>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: #666;'>Geleceğin Yapay Zeka Video Motoru</p>", unsafe_allow_html=True)
+st.markdown("<div class='brand-subtitle'>Geleceğin Yapay Zeka Video Motoru</div>", unsafe_allow_html=True)
 
-# --- ANA MOTOR ---
-url = st.text_input("", placeholder="YouTube URL'sini buraya yapıştırın...")
+st.write("")
+url = st.text_input("", placeholder="✨ YouTube URL'sini buraya yapıştırın...")
 
 col1, col2, col3 = st.columns([1,2,1])
 with col2:
@@ -96,7 +168,7 @@ if process_btn:
             
             result = model.transcribe("analiz.mp3")
             
-            # Akıllı Kesit Bulucu (Tier bazlı süreye göre)
+            # Akıllı Kesit Bulucu
             en_iyi_start = 0
             max_words = 0
             for i in range(len(result["segments"])):
@@ -110,15 +182,15 @@ if process_btn:
             status.markdown(f"📥 **{quality}p** görüntü akışı indiriliyor...")
             progress.progress(45)
             
-ydl_opts = {
-    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-    'outtmpl': 'indirilen_video.mp4',
-    'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-    'quiet': True,
-    'no_warnings': True,
-    'nocheckcertificate': True,
-}
-  
+            ydl_opts = {
+                'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+                'outtmpl': 'indirilen_video.mp4',
+                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+                'quiet': True,
+                'no_warnings': True,
+                'nocheckcertificate': True,
+            }
+              
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
@@ -126,7 +198,6 @@ ydl_opts = {
             status.markdown(f"✂️ **{user_tier}** dikey kadrajlama ve render yapılıyor...")
             progress.progress(75)
             
-            # FFmpeg: Tier ayarlarına göre render hızı ve kalite dengesi
             subprocess.run([
                 'ffmpeg', '-i', 'raw.mp4',
                 '-vf', 'crop=ih*(9/16):ih',
@@ -155,4 +226,4 @@ ydl_opts = {
     else:
         st.warning("Devam etmek için bir video linki gereklidir.")
 
-st.markdown("<p style='text-align: center; font-size: 12px; color: #333; margin-top: 100px;'>ELVORA AI CLOUD SYSTEM V2.0 - PREMIUM ACCESS</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-size: 12px; color: #444; margin-top: 120px;'>ELVORA AI CLOUD SYSTEM V2.0 - PREMIUM ACCESS</p>", unsafe_allow_html=True)
