@@ -110,7 +110,7 @@ if process_btn:
             status.markdown(f"📥 **{quality}p** görüntü akışı indiriliyor...")
             progress.progress(45)
             
-            ydl_opts = {
+ydl_opts = {
     'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
     'outtmpl': 'indirilen_video.mp4',
     'cookiesfrombrowser': ('chrome',), # <--- Sihirli satır bu!
@@ -119,7 +119,7 @@ if process_btn:
     'no_warnings': True,
     'nocheckcertificate': True,
 }
-            
+  
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
