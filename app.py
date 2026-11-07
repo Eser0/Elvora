@@ -10,20 +10,15 @@ st.set_page_config(page_title="Elvora AI | Next-Gen Shorts Platform", page_icon=
 # LÜKS & AKICI TASARIM (DARK LUXURY CSS)
 st.markdown("""
     <style>
-    /* Ana Arka Plan ve Tipografi */
     .stApp { 
         background: radial-gradient(circle at 50% 0%, #111116 0%, #050508 100%); 
         color: #f1f5f9; 
         font-family: 'Inter', sans-serif; 
     }
-    
-    /* Yan Panel (Sidebar) Tasarımı */
     [data-testid="stSidebar"] { 
         background-color: #07070a; 
         border-right: 1px solid rgba(255, 255, 255, 0.05); 
     }
-    
-    /* Başlık ve Logo Efekti */
     .brand-title { 
         font-size: 48px; 
         font-weight: 900; 
@@ -34,7 +29,6 @@ st.markdown("""
         letter-spacing: -1px;
         margin-bottom: 5px;
     }
-    
     .brand-subtitle {
         text-align: center; 
         color: #888896; 
@@ -42,8 +36,6 @@ st.markdown("""
         letter-spacing: 1px;
         margin-bottom: 30px;
     }
-    
-    /* VIP Plan Kartları */
     .plan-box { 
         padding: 18px; 
         border-radius: 14px; 
@@ -60,8 +52,6 @@ st.markdown("""
     .nano-border { border-left: 4px solid #71717a; }
     .flash-border { border-left: 4px solid #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1); }
     .ultra-border { border-left: 4px solid #f43f5e; box-shadow: 0 0 25px rgba(244, 63, 94, 0.15); }
-    
-    /* Akıcı Buton Tasarımı */
     .stButton>button { 
         width: 100%; 
         height: 52px; 
@@ -80,8 +70,6 @@ st.markdown("""
         transform: translateY(-2px); 
         box-shadow: 0 8px 25px rgba(255, 75, 75, 0.35); 
     }
-    
-    /* Input (Link Kutusu) Tasarımı */
     .stTextInput>div>div>input {
         background-color: rgba(18, 18, 24, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.1);
@@ -89,23 +77,16 @@ st.markdown("""
         border-radius: 12px;
         padding: 14px;
         font-size: 16px;
-        transition: all 0.3s ease;
-    }
-    .stTextInput>div>div>input:focus {
-        border-color: #ff4b2b;
-        box-shadow: 0 0 15px rgba(255, 75, 75, 0.2);
     }
     </style>
     """, unsafe_allow_html=True)
 
-# --- AI ENGINE ---
 @st.cache_resource
 def load_ai():
     return whisper.load_model("base")
 
 model = load_ai()
 
-# --- SIDEBAR: ÜYELİK VE PLAN YÖNETİMİ ---
 with st.sidebar:
     st.markdown("<h2 style='text-align: center; font-weight: 800; color: #fff;'>👑 ÜYELİK PANELİ</h2>", unsafe_allow_html=True)
     st.write("")
@@ -131,14 +112,13 @@ with st.sidebar:
             </div>""", unsafe_allow_html=True)
         quality, duration, crf, threads = "1080", 60, "20", 4
         
-    else: # VIP ULTRA
+    else: 
         st.markdown("""<div class='plan-box ultra-border'>
             <h4 style='color:#f43f5e; margin:0 0 8px 0;'>ULTRA-2 VIP</h4>
             <p style='font-size:13px; color:#a1a1aa; margin:0;'>• Sınırsız Öncelikli Hak<br>• 1080p Ultra Kalite<br>• 90 Saniye Süre<br>• Maksimum AI İşlemci</p>
             </div>""", unsafe_allow_html=True)
         quality, duration, crf, threads = "1080", 90, "17", 8
 
-# --- ANA EKRAN ---
 st.markdown("<div class='brand-title'>ELVORA AI</div>", unsafe_allow_html=True)
 st.markdown("<div class='brand-subtitle'>Geleceğin Yapay Zeka Video Motoru</div>", unsafe_allow_html=True)
 
@@ -155,11 +135,9 @@ if process_btn:
         progress = st.progress(0)
         
         try:
-            # Temizlik
             for f in ["analiz.mp3", "raw.mp4", "elvora_final.mp4"]:
                 if os.path.exists(f): os.remove(f)
 
-            # 1. ADIM: ANALİZ
             status.markdown(f"🧬 **{user_tier}** motoru devrede. AI videoyu dinliyor...")
             progress.progress(15)
             
@@ -168,38 +146,26 @@ if process_btn:
             
             result = model.transcribe("analiz.mp3")
             
-            # Akıllı Kesit Bulucu
-            en_iyi_start = 0
-            max_words = 0
-            for i in range(len(result["segments"])):
-                s = result["segments"][i]["start"]
-                words = sum(len(seg["text"].split()) for seg in result["segments"] if s <= seg["start"] <= s + duration)
-                if words > max_words:
-                    max_words = words
-                    en_iyi_start = s
-            
-            # 2. ADIM: İNDİRME
             status.markdown(f"📥 **{quality}p** görüntü akışı indiriliyor...")
             progress.progress(45)
             
-ydl_opts = {
+            ydl_opts = {
                 'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
                 'outtmpl': 'indirilen_video.mp4',
                 'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
                 'quiet': True,
                 'no_warnings': True,
                 'nocheckcertificate': True,
-                }
+            }
               
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
-            # 3. ADIM: PROFESYONEL RENDER
             status.markdown(f"✂️ **{user_tier}** dikey kadrajlama ve render yapılıyor...")
             progress.progress(75)
             
             subprocess.run([
-                'ffmpeg', '-i', 'raw.mp4',
+                'ffmpeg', '-i', 'indirilen_video.mp4',
                 '-vf', 'crop=ih*(9/16):ih',
                 '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', crf,
                 '-threads', str(threads),
@@ -209,10 +175,8 @@ ydl_opts = {
             progress.progress(100)
             status.success(f"🎬 {user_tier} ile işleminiz başarıyla tamamlandı!")
             
-            # Sonuç Ekranı
             st.video("elvora_final.mp4")
             
-            # İndirme Butonu
             with open("elvora_final.mp4", "rb") as f:
                 st.download_button(
                     label=f"📥 {quality}p OLARAK CİHAZA İNDİR",
