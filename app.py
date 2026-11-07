@@ -1,0 +1,156 @@
+import streamlit as st
+import yt_dlp
+import whisper
+import os
+import subprocess
+
+# --- ELVORA AI ENTERPRISE THEME ---
+st.set_page_config(page_title="Elvora AI | Next-Gen Shorts Platform", page_icon="💎", layout="wide")
+
+# Özel CSS: Her plan için ayrı renk paleti ve premium efektler
+st.markdown("""
+    <style>
+    .stApp { background-color: #050505; color: #e0e0e0; font-family: 'Inter', sans-serif; }
+    [data-testid="stSidebar"] { background-color: #080808; border-right: 1px solid #1a1a1a; }
+    
+    /* Başlık ve Logo */
+    .brand-title { font-size: 42px; font-weight: 900; background: linear-gradient(90deg, #ff4b2b, #ff416c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; margin-bottom: 0px; }
+    
+    /* Plan Kartları Tasarımı */
+    .plan-box { padding: 20px; border-radius: 15px; border: 1px solid #222; background: #0c0c0c; margin-bottom: 20px; transition: 0.3s; }
+    .nano-border { border-left: 5px solid #888; }
+    .flash-border { border-left: 5px solid #00c6ff; box-shadow: 0 0 15px rgba(0, 198, 255, 0.1); }
+    .ultra-border { border-left: 5px solid #ff4b2b; box-shadow: 0 0 20px rgba(255, 75, 75, 0.2); }
+    
+    /* Buton Tasarımı */
+    .stButton>button { width: 100%; height: 50px; border-radius: 10px; background: linear-gradient(45deg, #222, #333); color: white; border: none; font-weight: bold; font-size: 16px; transition: 0.4s; }
+    .stButton>button:hover { background: linear-gradient(45deg, #ff416c, #ff4b2b); transform: scale(1.02); box-shadow: 0 5px 15px rgba(255, 75, 75, 0.4); }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- AI ENGINE ---
+@st.cache_resource
+def load_ai():
+    return whisper.load_model("base")
+
+model = load_ai()
+
+# --- SIDEBAR: ÜYELİK VE PLAN YÖNETİMİ ---
+with st.sidebar:
+    st.markdown("<h2 style='text-align: center;'>👑 Üyelik Paneli</h2>", unsafe_allow_html=True)
+    
+    user_tier = st.selectbox(
+        "Mevcut Lisansınız:",
+        ["Elvora Nano-2 (Ücretsiz)", "Elvora Flash-2 (Special)", "Elvora Ultra-2 (VIP)"]
+    )
+    
+    st.write("---")
+    
+    if user_tier == "Elvora Nano-2 (Ücretsiz)":
+        st.markdown("""<div class='plan-box nano-border'>
+            <h3 style='color:#888;'>NANO-2</h3>
+            <p>• Günlük 2 Video Hakkı<br>• 720p Standart Kalite<br>• 30 Saniye Kısıtlı</p>
+            </div>""", unsafe_allow_html=True)
+        quality, duration, crf, threads = "720", 30, "26", 2
+    
+    elif user_tier == "Elvora Flash-2 (Special)":
+        st.markdown("""<div class='plan-box flash-border'>
+            <h3 style='color:#00c6ff;'>FLASH-2</h3>
+            <p>• Aylık Kullanım Hakkı<br>• 1080p Yüksek Kalite<br>• 60 Saniye Süre<br>• Hızlı Render</p>
+            </div>""", unsafe_allow_html=True)
+        quality, duration, crf, threads = "1080", 60, "20", 4
+        
+    else: # VIP ULTRA
+        st.markdown("""<div class='plan-box ultra-border'>
+            <h3 style='color:#ff4b2b;'>ULTRA-2 VIP</h3>
+            <p>• Sınırsız Kullanım Hakı<br>• 1080p Ultra Kalite<br>• 90 Saniye Süre<br>• Maksimum AI İşlemci</p>
+            </div>""", unsafe_allow_html=True)
+        quality, duration, crf, threads = "1080", 90, "17", 8
+
+st.markdown("<div class='brand-title'>ELVORA AI</div>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: #666;'>Geleceğin Yapay Zeka Video Motoru</p>", unsafe_allow_html=True)
+
+# --- ANA MOTOR ---
+url = st.text_input("", placeholder="YouTube URL'sini buraya yapıştırın...")
+
+col1, col2, col3 = st.columns([1,2,1])
+with col2:
+    process_btn = st.button("SİHRİ BAŞLAT")
+
+if process_btn:
+    if url:
+        status = st.empty()
+        progress = st.progress(0)
+        
+        try:
+            # Temizlik
+            for f in ["analiz.mp3", "raw.mp4", "elvora_final.mp4"]:
+                if os.path.exists(f): os.remove(f)
+
+            # 1. ADIM: ANALİZ
+            status.markdown(f"🧬 **{user_tier}** motoru devrede. AI videoyu dinliyor...")
+            progress.progress(15)
+            
+            with yt_dlp.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': 'analiz', 'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3'}]}) as ydl:
+                ydl.download([url])
+            
+            result = model.transcribe("analiz.mp3")
+            
+            # Akıllı Kesit Bulucu (Tier bazlı süreye göre)
+            en_iyi_start = 0
+            max_words = 0
+            for i in range(len(result["segments"])):
+                s = result["segments"][i]["start"]
+                words = sum(len(seg["text"].split()) for seg in result["segments"] if s <= seg["start"] <= s + duration)
+                if words > max_words:
+                    max_words = words
+                    en_iyi_start = s
+            
+            # 2. ADIM: İNDİRME
+            status.markdown(f"📥 **{quality}p** görüntü akışı indiriliyor...")
+            progress.progress(45)
+            
+            ydl_opts = {
+                'format': f'bestvideo[height<={quality}]+bestaudio/best',
+                'outtmpl': 'raw.mp4',
+                'download_ranges': yt_dlp.utils.download_range_func(None, [(en_iyi_start, en_iyi_start + duration)]),
+                'force_keyframes_at_cuts': True,
+                'merge_output_format': 'mp4'
+            }
+            with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                ydl.download([url])
+
+            # 3. ADIM: PROFESYONEL RENDER
+            status.markdown(f"✂️ **{user_tier}** dikey kadrajlama ve render yapılıyor...")
+            progress.progress(75)
+            
+            # FFmpeg: Tier ayarlarına göre render hızı ve kalite dengesi
+            subprocess.run([
+                'ffmpeg', '-i', 'raw.mp4',
+                '-vf', 'crop=ih*(9/16):ih',
+                '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', crf,
+                '-threads', str(threads),
+                '-c:a', 'copy', 'elvora_final.mp4'
+            ])
+
+            progress.progress(100)
+            status.success(f"🎬 {user_tier} ile işleminiz başarıyla tamamlandı!")
+            
+            # Sonuç Ekranı
+            st.video("elvora_final.mp4")
+            
+            # İndirme Butonu
+            with open("elvora_final.mp4", "rb") as f:
+                st.download_button(
+                    label=f"📥 {quality}p OLARAK CİHAZA İNDİR",
+                    data=f,
+                    file_name=f"elvora_{user_tier.split()[1].lower()}.mp4",
+                    mime="video/mp4"
+                )
+
+        except Exception as e:
+            st.error(f"Sistem Hatası: {e}")
+    else:
+        st.warning("Devam etmek için bir video linki gereklidir.")
+
+st.markdown("<p style='text-align: center; font-size: 12px; color: #333; margin-top: 100px;'>ELVORA AI CLOUD SYSTEM V2.0 - PREMIUM ACCESS</p>", unsafe_allow_html=True)
