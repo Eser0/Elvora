@@ -4,50 +4,51 @@ import whisper
 import os
 import subprocess
 
-# --- ELVORA AI ENTERPRISE THEME ---
-st.set_page_config(page_title="Elvora AI | Next-Gen Shorts Platform", page_icon="💎", layout="wide")
+# --- SAYFA AYARLARI ---
+st.set_page_config(page_title="Elvora AI", page_icon="💎", layout="wide")
 
-# LÜKS & AKICI TASARIM (DARK LUXURY CSS)
+# --- CSS TASARIMI ---
 st.markdown("""
     <style>
-    .stApp { 
-        background: radial-gradient(circle at 50% 0%, #111116 0%, #050508 100%); 
-        color: #f1f5f9; 
-        font-family: 'Inter', sans-serif; 
-    }
-    [data-testid="stSidebar"] { 
-        background-color: #07070a; 
-        border-right: 1px solid rgba(255, 255, 255, 0.05); 
-    }
-    .brand-title { 
-        font-size: 48px; 
-        font-weight: 900; 
-        background: linear-gradient(135deg, #ffffff 0%, #ff4b2b 50%, #ff416c 100%); 
-        -webkit-background-clip: text; 
-        -webkit-text-fill-color: transparent; 
-        text-align: center; 
-        letter-spacing: -1px;
-        margin-bottom: 5px;
-    }
-    .brand-subtitle {
-        text-align: center; 
-        color: #888896; 
-        font-size: 15px;
-        letter-spacing: 1px;
-        margin-bottom: 30px;
-    }
-    .plan-box { 
-        padding: 18px; 
-        border-radius: 14px; 
-        border: 1px solid rgba(255, 255, 255, 0.08); 
-        background: rgba(18, 18, 24, 0.6); 
-        backdrop-filter: blur(10px);
-        margin-bottom: 15px; 
-        transition: all 0.3s ease; 
-    }
-    .plan-box:hover {
-        transform: translateY(-3px);
-        border-color: rgba(255, 255, 255, 0.2);
+    .stApp { background: radial-gradient(circle at 50% 0%, #111116 0%, #050508 100%); color: #f1f5f9; }
+    .brand-title { font-size: 48px; font-weight: 900; background: linear-gradient(135deg, #fff 0%, #ff4b2b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+    .brand-subtitle { text-align: center; color: #888; margin-bottom: 30px; }
+    </style>
+""", unsafe_allow_html=True)
+
+# --- ARAYÜZ ---
+st.markdown("<h1 class='brand-title'>ELVORA AI</h1>", unsafe_allow_html=True)
+st.markdown("<p class='brand-subtitle'>Geleceğin Yapay Zeka Video Motoru</p>", unsafe_allow_html=True)
+
+# Sidebar (Üyelik Paneli)
+with st.sidebar:
+    st.header("💎 Üyelik Paneli")
+    user_tier = st.selectbox("Mevcut Lisansınız:", ["Elvora Ultra 2 (VIP)"])
+    st.info("• Sınırsız Kullanım Hakkı\n• 1080p Ultra Kalite\n• 30 Saniye Süre")
+
+# Ana Giriş
+url = st.text_input("YouTube Video Linkini Yapıştır:")
+if st.button("🚀 SHORTS BAŞLAT"):
+    if url:
+        status = st.empty()
+        progress = st.progress(0)
+        
+        # BURAYA AZ ÖNCE DÜZELTTİĞİMİZ TRY-EXCEPT BLOĞUNU YAPIŞTIR
+        try:
+            # (Buraya az önce düzelttiğimiz 137. satırdan başlayan try bloğunu olduğu gibi koy)
+            # ... (Kodun o kısmı zaten elinde) ...
+            
+        except Exception as e:
+            st.error(f"Sistem Hatası: {e}")
+            
+        # Sonuç gösterme kısmı
+        if os.path.exists("elvora_final.mp4"):
+            st.success("İşlem Başarılı!")
+            st.video("elvora_final.mp4")
+            with open("elvora_final.mp4", "rb") as f:
+                st.download_button("📥 İNDİR", f, "elvora.mp4")
+    else:
+        st.warning("Lütfen bir link gir!")
     }
     .nano-border { border-left: 4px solid #71717a; }
     .flash-border { border-left: 4px solid #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1); }
