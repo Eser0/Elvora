@@ -77,7 +77,7 @@ st.markdown("""
         line-height: 1.6;
     }
 
-    /* Netflix / Gönderdiğin Tarz Fiyatlandırma Kartları (Siyah Tema) */
+    /* Fiyatlandırma Izgarası ve Kutuları */
     .pricing-grid {
         display: flex;
         justify-content: center;
@@ -278,13 +278,13 @@ elif selected_tab == "✂️ Shorts Kesici":
                 st.warning("⚠️ Lütfen geçerli bir YouTube video bağlantısı girin.")
 
 # ==========================================================
-# 3. BÖLÜM: ÜYELİK PLANLARI (GÖNDERDİĞİN FOTOĞRAF TARZI & DOLAR)
+# 3. BÖLÜM: ÜYELİK PLANLARI
 # ==========================================================
 elif selected_tab == "💎 Üyelik Planları":
     st.markdown("<div class='hero-title'>Kendinize Uygun <span>Bir Plan Seçin</span></div>", unsafe_allow_html=True)
     st.markdown("<div class='hero-desc'>İçerik üretim hızınızı artıracak profesyonel paketler. (Üstüne tıklayarak seçim yapabilirsiniz)</div>", unsafe_allow_html=True)
 
-    # HTML & CSS ile interaktif seçilebilir plan kartları
+    # ⚠️ BURADA UNSAFE_ALLOW_HTML=TRUE İLE KARTLARIN DÜZGÜN GÖRÜNMESİNİ SAĞLIYORUZ
     st.markdown("""
         <div class="pricing-grid">
             <!-- Paket 1: Nano -->
