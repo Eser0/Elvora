@@ -181,13 +181,24 @@ elif selected_tab == "✂️ Shorts Kesici":
                     status.markdown("✂️ 9:16 Dikey kadrajlama ve render yapılıyor...")
                     progress.progress(70)
                     
-                    # FFmpeg ile dikey kırpma ve render (Güvenli ve hatasız sürüm)
-                    cmd = [
+                    # FFmpeg ile kusursuz dikey kırpma (Piksel ve ses uyumlu)
+                    subprocess.run([
                         'ffmpeg', '-y', '-i', 'indirilen_video.mp4',
-                        '-vf', 'crop=ih*(9/16):ih',
-                        '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '20',
-                        '-c:a', 'copy', 'elvora_final.mp4'
-                    ]
+                        '-vf', 'crop=w=2*floor(ih*(9/16)/2):h=ih',
+                        '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'ultrafast', '-crf', '22',
+                        '-c:a', 'aac', '-b:a', '128k', 'elvora_final.mp4'
+                    ])
+
+                    # Dosyanın başarılı oluşup oluşmadığını ve boyutunu kontrol edelim
+                    if os.path.exists("elvora_final.mp4") and os.path.getsize("elvora_final.mp4") > 0:
+                        progress.progress(100)
+                        status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
+                        st.video("elvora_final.mp4")
+                        
+                        with open("elvora_final.mp4", "rb") as f:
+                            st.download_button("📥 KLIBI CIHAZA İNDİR", f, "elvora_shorts.mp4", mime="video/mp4")
+                    else:
+                        st.error("Sistem Hatası: Video kırpılırken dosya oluşturulamadı. Lütfen farklı bir video linki deneyin.")
                     
                     # İşlemi çalıştır ve bitmesini bekle
                     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
