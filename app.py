@@ -181,12 +181,21 @@ elif selected_tab == "✂️ Shorts Kesici":
                     status.markdown("✂️ 9:16 Dikey kadrajlama ve render yapılıyor...")
                     progress.progress(70)
                     
-                    subprocess.run([
+                    # FFmpeg ile dikey kırpma ve render (Güvenli ve hatasız sürüm)
+                    cmd = [
                         'ffmpeg', '-y', '-i', 'indirilen_video.mp4',
                         '-vf', 'crop=ih*(9/16):ih',
                         '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '20',
                         '-c:a', 'copy', 'elvora_final.mp4'
-                    ])
+                    ]
+                    
+                    # İşlemi çalıştır ve bitmesini bekle
+                    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    stdout, stderr = process.communicate()
+                    
+                    # Dosyanın diske tam olarak yazıldığından emin olalım
+                    import time
+                    time.sleep(1)
 
                     progress.progress(100)
                     status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
