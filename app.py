@@ -190,7 +190,7 @@ if process_btn:
                 '-c:a', 'copy', 'elvora_final.mp4'
             ])
 
-except Exception as e:
+        except Exception as e:
                     st.error(f"Sistem Hatası: {e}")
             
                     progress.progress(100)
