@@ -155,53 +155,62 @@ elif selected_tab == "✂️ Shorts Kesici":
                 progress = st.progress(0)
                 
                 try:
-                    # 1. Eski dosyaları temizle
-                    for f in ["analiz.mp3", "indirilen_video.mp4", "elvora_final.mp4"]:
-                        if os.path.exists(f): 
+                    # 1. Eski kalıntı dosyaları temizle
+                    for f in os.listdir("."):
+                        if f.startswith("indirilen_video") or f == "elvora_final.mp4":
                             try: os.remove(f)
                             except: pass
 
-                    status.markdown("🧬 **Elvora AI** videoyu indiriyor...")
+                    status.markdown("🧬 **Elvora AI** YouTube videosunu indiriyor...")
                     progress.progress(25)
                     
-                    # 403 engeline takılmayan YouTube indirme motoru
+                    # Garantili YouTube indirme ayarları
                     ydl_opts = {
-                        'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', 
-                        'outtmpl': 'indirilen_video.mp4', 
+                        'format': 'best[ext=mp4]/best', 
+                        'outtmpl': 'indirilen_video.%(ext)s', 
                         'nocheckcertificate': True, 
-                        'ignoreerrors': True,
                         'no_warnings': True,
                         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                        'extractor_args': {'youtube': {'player_client': ['ios', 'web']}}
+                        'extractor_args': {'youtube': {'player_client': ['android', 'web']}}
                     }
+                    
                     with yt_dlp.YoutubeDL(ydl_opts) as ydl: 
                         ydl.download([url])
 
-                    status.markdown("✂️ 9:16 Dikey kadrajlama yapılıyor...")
-                    progress.progress(70)
-                    
-                    # FFmpeg ile dikey kırpma
-                    ffmpeg_cmd = [
-                        'ffmpeg', '-y', '-i', 'indirilen_video.mp4',
-                        '-vf', 'crop=w=2*floor(ih*(9/16)/2):h=ih',
-                        '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'ultrafast', '-crf', '22',
-                        '-c:a', 'aac', 'elvora_final.mp4'
-                    ]
-                    
-                    result = subprocess.run(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+                    # İndirilen dosyayı uzantısı ne olursa olsun otomatik bul (.mp4, .webm vs.)
+                    girdi_dosyasi = None
+                    for f in os.listdir("."):
+                        if f.startswith("indirilen_video"):
+                            girdi_dosyasi = f
+                            break
 
-                    # Kontrol
-                    if os.path.exists("elvora_final.mp4") and os.path.getsize("elvora_final.mp4") > 0:
-                        progress.progress(100)
-                        status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
-                        st.video("elvora_final.mp4")
-                        
-                        with open("elvora_final.mp4", "rb") as f:
-                            st.download_button("📥 KLIBI CIHAZA İNDİR", f, "elvora_shorts.mp4", mime="video/mp4")
+                    if not girdi_dosyasi:
+                        st.error("İndirme Hatası: YouTube videosu sunucuya indirilemedi. Lütfen farklı bir YouTube linki deneyin.")
                     else:
-                        st.error("Render Hatası: FFmpeg dikey videoyu oluşturamadı.")
-                        if result.stderr:
-                            st.code(result.stderr[-500:]) # Hata detayını göster
+                        status.markdown("✂️ 9:16 Dikey kadrajlama yapılıyor...")
+                        progress.progress(70)
+                        
+                        # FFmpeg ile garantili dikey kırpma
+                        ffmpeg_cmd = [
+                            'ffmpeg', '-y', '-i', girdi_dosyasi,
+                            '-vf', 'crop=w=2*floor(ih*(9/16)/2):h=ih',
+                            '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'ultrafast', '-crf', '22',
+                            '-c:a', 'aac', 'elvora_final.mp4'
+                        ]
+                        
+                        result = subprocess.run(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+
+                        if os.path.exists("elvora_final.mp4") and os.path.getsize("elvora_final.mp4") > 0:
+                            progress.progress(100)
+                            status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
+                            st.video("elvora_final.mp4")
+                            
+                            with open("elvora_final.mp4", "rb") as f:
+                                st.download_button("📥 KLIBI CIHAZA İNDİR", f, "elvora_shorts.mp4", mime="video/mp4")
+                        else:
+                            st.error("Render Hatası: FFmpeg dikey videoyu oluşturamadı.")
+                            if result.stderr:
+                                st.code(result.stderr[-400:])
 
                 except Exception as e:
                     st.error(f"Sistem Hatası: {e}")
