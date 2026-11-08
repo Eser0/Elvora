@@ -19,20 +19,9 @@ st.markdown("""
         background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #08080c 60%, #030305 100%);
         color: #f8fafc; 
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        overflow-x: hidden;
     }
 
-    /* 2. Mouse İmlecini Takip Eden Neon Işık Efekti (Cursor Glow) */
-    body::before {
-        content: '';
-        position: fixed;
-        top: 0; left: 0; width: 100vw; height: 100vh;
-        background: radial-gradient(800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 65, 108, 0.06), transparent 40%);
-        z-index: 9999;
-        pointer-events: none;
-    }
-
-    /* 3. Navbar / Üst Menü */
+    /* 2. Navbar / Üst Menü */
     .nav-bar {
         display: flex;
         justify-content: space-between;
@@ -77,71 +66,6 @@ st.markdown("""
         line-height: 1.6;
     }
 
-    /* Fiyatlandırma Izgarası ve Kutuları */
-    .pricing-grid {
-        display: flex;
-        justify-content: center;
-        gap: 25px;
-        margin-top: 30px;
-        flex-wrap: wrap;
-    }
-    .pricing-box {
-        background: #121218;
-        border: 2px solid rgba(255, 255, 255, 0.08);
-        border-radius: 20px;
-        width: 320px;
-        padding: 30px;
-        text-align: left;
-        position: relative;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        cursor: pointer;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    .pricing-box:hover {
-        transform: translateY(-8px);
-        border-color: rgba(255, 65, 108, 0.5);
-        box-shadow: 0 20px 40px rgba(255, 65, 108, 0.2);
-    }
-    .pricing-box.active {
-        border: 2px solid #ff416c !important;
-        transform: scale(1.03);
-        background: linear-gradient(180deg, rgba(255, 65, 108, 0.08) 0%, #121218 100%);
-        box-shadow: 0 0 35px rgba(255, 65, 108, 0.3);
-    }
-    .popular-badge {
-        position: absolute;
-        top: -12px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-        color: white;
-        padding: 4px 16px;
-        font-size: 11px;
-        font-weight: 800;
-        border-radius: 20px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-    }
-    .plan-header {
-        font-size: 22px;
-        font-weight: 800;
-        color: #ffffff;
-        margin-bottom: 5px;
-    }
-    .plan-price {
-        font-size: 32px;
-        font-weight: 900;
-        color: #ff416c;
-        margin: 20px 0;
-    }
-    .plan-features {
-        font-size: 14px;
-        color: #94a3b8;
-        line-height: 2.2;
-        border-top: 1px solid rgba(255,255,255,0.08);
-        padding-top: 15px;
-    }
-
     /* Modern Giriş ve Butonlar */
     .stTextInput input {
         background-color: #12121a !important;
@@ -173,22 +97,24 @@ st.markdown("""
         transform: translateY(-3px) !important;
         box-shadow: 0 15px 35px rgba(255, 65, 108, 0.6) !important;
     }
+    
+    /* Streamlit Radio / Sekme Tasarımı */
+    .stRadio > div {
+        background: rgba(20, 20, 28, 0.8);
+        padding: 10px;
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: center;
+    }
     </style>
-
-    <!-- Mouse imlecini takip eden JavaScript -->
-    <script>
-    document.addEventListener('mousemove', e => {
-        document.documentElement.style.setProperty('--mouse-x', e.clientX + 'px');
-        document.documentElement.style.setProperty('--mouse-y', e.clientY + 'px');
-    });
-    </script>
 """, unsafe_allow_html=True)
 
 # --- ÜST NAVBAR ---
 st.markdown("""
     <div class="nav-bar">
         <div class="logo-text">⚡ ELVORA AI</div>
-        <div style="color: #94a3b8; font-size: 14px; font-weight: 600;">Next-Gen Video Suite v3.0</div>
+        <div style="color: #94a3b8; font-size: 14px; font-weight: 600;">Next-Gen Video Suite v3.1</div>
     </div>
 """, unsafe_allow_html=True)
 
@@ -212,11 +138,11 @@ if selected_tab == "🏠 Ana Sayfa":
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        st.markdown("<div class='pricing-box'><h3>🚀 01. Bağlantı</h3><p style='color:#94a3b8;'>YouTube linkini sisteme girin, saniyeler içinde işleme başlasın.</p></div>", unsafe_allow_html=True)
+        st.info("🚀 **01. Bağlantı**\n\nYouTube linkini sisteme girin, saniyeler içinde işleme başlasın.")
     with col2:
-        st.markdown("<div class='pricing-box'><h3>🧬 02. AI Analiz</h3><p style='color:#94a3b8;'>Yapay zeka en heyecanlı anları ve konuşmaları otomatik tespit eder.</p></div>", unsafe_allow_html=True)
+        st.info("🧬 **02. AI Analiz**\n\nYapay zeka en heyecanlı anları ve konuşmaları otomatik tespit eder.")
     with col3:
-        st.markdown("<div class='pricing-box'><h3>📥 03. Dikey İndir</h3><p style='color:#94a3b8;'>9:16 kusursuz kadrajlanmış Shorts klibini anında cihazına al.</p></div>", unsafe_allow_html=True)
+        st.info("📥 **03. Dikey İndir**\n\n9:16 kusursuz kadrajlanmış Shorts klibini anında cihazına al.")
 
 # ==========================================================
 # 2. BÖLÜM: SHORTS KESİCİ (BEYİN)
@@ -278,55 +204,58 @@ elif selected_tab == "✂️ Shorts Kesici":
                 st.warning("⚠️ Lütfen geçerli bir YouTube video bağlantısı girin.")
 
 # ==========================================================
-# 3. BÖLÜM: ÜYELİK PLANLARI
+# 3. BÖLÜM: ÜYELİK PLANLARI (STREAMLIT UYUMLU PROFESYONEL KARTLAR)
 # ==========================================================
 elif selected_tab == "💎 Üyelik Planları":
     st.markdown("<div class='hero-title'>Kendinize Uygun <span>Bir Plan Seçin</span></div>", unsafe_allow_html=True)
-    st.markdown("<div class='hero-desc'>İçerik üretim hızınızı artıracak profesyonel paketler. (Üstüne tıklayarak seçim yapabilirsiniz)</div>", unsafe_allow_html=True)
+    st.markdown("<div class='hero-desc'>İçerik üretim hızınızı artıracak profesyonel paketler.</div>", unsafe_allow_html=True)
+    
+    st.write("")
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        with st.container(border=True):
+            st.markdown("### Nano (Temel)")
+            st.caption("720p Standart Kalite")
+            st.markdown("## **$4.99** <span style='font-size:12px; color:#94a3b8;'>/ ay</span>", unsafe_allow_html=True)
+            st.info("🎉 İLK 1 AY ÜCRETSİZ")
+            st.markdown("""
+                * Günlük 2 Video Hakkı
+                * 720p HD Çözünürlük
+                * 30 Saniye Süre Sınırı
+                * Standart İşlemci Hızı
+            """)
+            if st.button("Nano Planı Seç", key="btn1"):
+                st.success("Nano planı seçildi!")
 
-    # ⚠️ BURADA UNSAFE_ALLOW_HTML=TRUE İLE KARTLARIN DÜZGÜN GÖRÜNMESİNİ SAĞLIYORUZ
-    st.markdown("""
-        <div class="pricing-grid">
-            <!-- Paket 1: Nano -->
-            <div class="pricing-box" onclick="this.classList.toggle('active')">
-                <div class="plan-header">Nano (Temel)</div>
-                <div style="font-size:12px; color:#94a3b8;">720p Standart Kalite</div>
-                <div class="plan-price">$4.99 <span style="font-size:12px; color:#94a3b8;">/ ay</span></div>
-                <div style="background:rgba(255,255,255,0.05); padding:6px 12px; border-radius:10px; font-size:12px; color:#ff416c; margin-bottom:15px; text-align:center;">🎉 İLK 1 AY ÜCRETSİZ</div>
-                <div class="plan-features">
-                    • Günlük 2 Video Hakkı<br>
-                    • 720p HD Çözünürlük<br>
-                    • 30 Saniye Süre Sınırı<br>
-                    • Standart İşlemci Hızı
-                </div>
-            </div>
+    with col2:
+        with st.container(border=True):
+            st.markdown("🔥 **EN ÇOK TERCİH EDİLEN**")
+            st.markdown("### Flash (Standard)")
+            st.caption("1080p Yüksek Kalite")
+            st.markdown("## **$10.99** <span style='font-size:12px; color:#94a3b8;'>/ ay</span>", unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
+            st.markdown("""
+                * Sınırsız Video Hakkı
+                * 1080p Tam HD Kalite
+                * 60 Saniye Süre Sınırı
+                * Öncelikli Hızlı Render
+            """)
+            if st.button("Flash Planı Seç", key="btn2"):
+                st.success("Flash planı seçildi!")
 
-            <!-- Paket 2: Flash (Popüler) -->
-            <div class="pricing-box active" onclick="this.classList.toggle('active')">
-                <div class="popular-badge">En Popüler</div>
-                <div class="plan-header">Flash (Standard)</div>
-                <div style="font-size:12px; color:#94a3b8;">1080p Yüksek Kalite</div>
-                <div class="plan-price">$10.99 <span style="font-size:12px; color:#94a3b8;">/ ay</span></div>
-                <div class="plan-features" style="margin-top:28px;">
-                    • Sınırsız Video Hakkı<br>
-                    • 1080p Tam HD Kalite<br>
-                    • 60 Saniye Süre Sınırı<br>
-                    • Öncelikli Hızlı Render
-                </div>
-            </div>
-
-            <!-- Paket 3: Ultra VIP (%35 İndirimli) -->
-            <div class="pricing-box" onclick="this.classList.toggle('active')">
-                <div style="position:absolute; top:-12px; left:50%; transform:translateX(-50%); background:#06b6d4; color:white; padding:4px 16px; font-size:11px; font-weight:800; border-radius:20px;">%35 İNDİRİMLİ</div>
-                <div class="plan-header">Premium (Ultra VIP)</div>
-                <div style="font-size:12px; color:#94a3b8;">4K + HDR / Maksimum Güç</div>
-                <div class="plan-price">$15.99 <span style="font-size:12px; color:#ff416c; text-decoration:line-through; font-size:16px;">$24.99</span></div>
-                <div class="plan-features">
-                    • Sınırsız Öncelikli Hak<br>
-                    • 4K Ultra Kalite Desteği<br>
-                    • 90 Saniye Süre Sınırı<br>
-                    • Maksimum AI İşlemci Gücü
-                </div>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+    with col3:
+        with st.container(border=True):
+            st.markdown("⚡ **%35 İNDİRİMLİ**")
+            st.markdown("### Premium (Ultra VIP)")
+            st.caption("4K + HDR / Maksimum Güç")
+            st.markdown("## **$15.99** <span style='font-size:12px; color:#ff416c; text-decoration:line-through;'>$24.99</span>", unsafe_allow_html=True)
+            st.markdown("""
+                * Sınırsız Öncelikli Hak
+                * 4K Ultra Kalite Desteği
+                * 90 Saniye Süre Sınırı
+                * Maksimum AI İşlemci Gücü
+            """)
+            if st.button("VIP Planı Seç", key="btn3"):
+                st.success("Ultra VIP planı seçildi!")
