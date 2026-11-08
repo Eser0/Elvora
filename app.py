@@ -149,16 +149,21 @@ if process_btn:
             progress.progress(45)
             
 ydl_opts = {
-                'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-                'outtmpl': 'indirilen_video.mp4',
-                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',
-                'quiet': True,
-                'no_warnings': True,
-                'nocheckcertificate': True,
-                'ignoreerrors': True,
-                'referer': 'https://www.youtube.com/',
-            }
-              
+    'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+    'outtmpl': 'indirilen_video.mp4',
+    
+    # --- 403 FORBIDDEN HATASINI ÇÖZEN YENİ AYARLAR ---
+    'nocheckcertificate': True,
+    'ignoreerrors': False,
+    'logtostderr': False,
+    'quiet': True,
+    'no_warnings': True,
+    'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+    'extractor_args': {
+        'youtube': {
+            'player_client': ['android', 'web'] # YouTube'a ben bir Android telefonum dedirtir
+        }
+            
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
