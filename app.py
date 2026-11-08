@@ -191,24 +191,21 @@ if process_btn:
             ])
 
         except Exception as e:
-                    st.error(f"Sistem Hatası: {e}")
+            st.error(f"Sistem Hatası: {e}")
+        
+        # İşlem bittikten sonra sonuçları göster (try/except bloğunun dışına çıkar)
+        if os.path.exists("elvora_final.mp4"):
+            progress.progress(100)
+            status.success(f"🎬 {user_tier} ile işleminiz başarıyla tamamlandı!")
+            st.video("elvora_final.mp4")
             
-                    progress.progress(100)
-                    status.success(f"🎬 {user_tier} ile işleminiz başarıyla tamamlandı!")
-                        
-                    st.video("elvora_final.mp4")
-                        
-                    with open("elvora_final.mp4", "rb") as f:
-            st.download_button(
+            with open("elvora_final.mp4", "rb") as f:
+                st.download_button(
                     label=f"📥 {quality}p OLARAK CİHAZA İNDİR",
                     data=f,
                     file_name=f"elvora_{user_tier.split()[1].lower()}.mp4",
                     mime="video/mp4"
                 )
 
-        except Exception as e:
-            st.error(f"Sistem Hatası: {e}")
     else:
         st.warning("Devam etmek için bir video linki gereklidir.")
-
-st.markdown("<p style='text-align: center; font-size: 12px; color: #444; margin-top: 120px;'>ELVORA AI CLOUD SYSTEM V2.0 - PREMIUM ACCESS</p>", unsafe_allow_html=True)
