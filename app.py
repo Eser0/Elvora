@@ -155,41 +155,42 @@ elif selected_tab == "✂️ Shorts Kesici":
                 progress = st.progress(0)
                 
                 try:
+                    # 1. Eski dosyaları temizle
                     for f in ["analiz.mp3", "indirilen_video.mp4", "elvora_final.mp4"]:
-                        if os.path.exists(f): os.remove(f)
+                        if os.path.exists(f): 
+                            try: os.remove(f)
+                            except: pass
 
-                    status.markdown("🧬 **Elvora AI** videoyu analiz ediyor...")
+                    status.markdown("🧬 **Elvora AI** videoyu indiriyor...")
                     progress.progress(25)
                     
+                    # 403 engeline takılmayan YouTube indirme motoru
                     ydl_opts = {
                         'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best', 
                         'outtmpl': 'indirilen_video.mp4', 
                         'nocheckcertificate': True, 
                         'ignoreerrors': True,
                         'no_warnings': True,
-                        'geo_bypass': True,
-                        'socket_timeout': 30,
                         'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                        'extractor_args': {
-                            'youtube': {
-                                'player_client': ['ios', 'web']
-                            }
-                        }
+                        'extractor_args': {'youtube': {'player_client': ['ios', 'web']}}
                     }
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl: ydl.download([url])
+                    with yt_dlp.YoutubeDL(ydl_opts) as ydl: 
+                        ydl.download([url])
 
-                    status.markdown("✂️ 9:16 Dikey kadrajlama ve render yapılıyor...")
+                    status.markdown("✂️ 9:16 Dikey kadrajlama yapılıyor...")
                     progress.progress(70)
                     
-                    # FFmpeg ile kusursuz dikey kırpma (Piksel ve ses uyumlu)
-                    subprocess.run([
+                    # FFmpeg ile dikey kırpma
+                    ffmpeg_cmd = [
                         'ffmpeg', '-y', '-i', 'indirilen_video.mp4',
                         '-vf', 'crop=w=2*floor(ih*(9/16)/2):h=ih',
                         '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'ultrafast', '-crf', '22',
-                        '-c:a', 'aac', '-b:a', '128k', 'elvora_final.mp4'
-                    ])
+                        '-c:a', 'aac', 'elvora_final.mp4'
+                    ]
+                    
+                    result = subprocess.run(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
 
-                    # Dosyanın başarılı oluşup oluşmadığını ve boyutunu kontrol edelim
+                    # Kontrol
                     if os.path.exists("elvora_final.mp4") and os.path.getsize("elvora_final.mp4") > 0:
                         progress.progress(100)
                         status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
@@ -198,22 +199,9 @@ elif selected_tab == "✂️ Shorts Kesici":
                         with open("elvora_final.mp4", "rb") as f:
                             st.download_button("📥 KLIBI CIHAZA İNDİR", f, "elvora_shorts.mp4", mime="video/mp4")
                     else:
-                        st.error("Sistem Hatası: Video kırpılırken dosya oluşturulamadı. Lütfen farklı bir video linki deneyin.")
-                    
-                    # İşlemi çalıştır ve bitmesini bekle
-                    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                    stdout, stderr = process.communicate()
-                    
-                    # Dosyanın diske tam olarak yazıldığından emin olalım
-                    import time
-                    time.sleep(1)
-
-                    progress.progress(100)
-                    status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
-                    st.video("elvora_final.mp4")
-                    
-                    with open("elvora_final.mp4", "rb") as f:
-                        st.download_button("📥 KLIBI CIHAZA İNDİR", f, "elvora_shorts.mp4", mime="video/mp4")
+                        st.error("Render Hatası: FFmpeg dikey videoyu oluşturamadı.")
+                        if result.stderr:
+                            st.code(result.stderr[-500:]) # Hata detayını göster
 
                 except Exception as e:
                     st.error(f"Sistem Hatası: {e}")
