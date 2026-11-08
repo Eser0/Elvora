@@ -10,38 +10,80 @@ st.set_page_config(page_title="Elvora AI", page_icon="💎", layout="wide")
 # --- CSS TASARIMI (Doğru ve hatasız yerinde) ---
 st.markdown("""
     <style>
-    .stApp { background: radial-gradient(circle at 50% 0%, #111116 0%, #050508 100%); color: #f1f5f9; }
-    .brand-title { font-size: 48px; font-weight: 900; background: linear-gradient(135deg, #fff 0%, #ff4b2b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
-    .brand-subtitle { text-align: center; color: #888; margin-bottom: 30px; }
-    .plan-box { padding: 18px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(18, 18, 24, 0.6); margin-bottom: 15px; }
-    .nano-border { border-left: 4px solid #71717a; }
-    .flash-border { border-left: 4px solid #06b6d4; box-shadow: 0 0 20px rgba(6, 182, 212, 0.1); }
-    .ultra-border { border-left: 4px solid #f43f5e; box-shadow: 0 0 25px rgba(244, 63, 94, 0.15); }
-    .stButton>button { 
-        width: 100%; 
-        height: 52px; 
-        border-radius: 12px; 
-        background: linear-gradient(135deg, #181824 0%, #09090f 100%); 
-        color: #ffffff; 
-        border: 1px solid rgba(255, 255, 255, 0.1); 
-        font-weight: 700; 
-        font-size: 16px; 
-        letter-spacing: 0.5px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+    /* Arka Plan ve Genel Renkler */
+    .stApp { 
+        background: radial-gradient(circle at 50% 0%, #1a1a24 0%, #08080c 100%); 
+        color: #f1f5f9; 
     }
-    .stButton>button:hover { 
-        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); 
-        border-color: transparent;
-        transform: translateY(-2px); 
-        box-shadow: 0 8px 25px rgba(255, 75, 75, 0.35); 
+    
+    /* Sidebar (Üyelik Paneli) Tasarımı */
+    [data-testid="stSidebar"] { 
+        background-color: #0b0b0f; 
+        border-right: 1px solid rgba(255, 255, 255, 0.05); 
     }
-    .stTextInput>div>div>input {
-        background-color: rgba(18, 18, 24, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: white;
-        border-radius: 12px;
-        padding: 14px;
+
+    /* Başlıklar */
+    .brand-title { 
+        font-size: 52px; 
+        font-weight: 900; 
+        background: linear-gradient(135deg, #ffffff 0%, #ff416c 50%, #ff4b2b 100%); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+        text-align: center; 
+        letter-spacing: -1px;
+        margin-bottom: 0px;
+    }
+    .brand-subtitle {
+        text-align: center; 
+        color: #94a3b8; 
         font-size: 16px;
+        letter-spacing: 1.5px;
+        margin-bottom: 35px;
+    }
+
+    /* Plan Kutuları */
+    .plan-box { 
+        padding: 16px; 
+        border-radius: 14px; 
+        background: rgba(25, 25, 35, 0.5); 
+        backdrop-filter: blur(10px);
+        margin-bottom: 15px; 
+    }
+    .nano-border { border-left: 4px solid #71717a; }
+    .flash-border { border-left: 4px solid #06b6d4; box-shadow: 0 0 15px rgba(6, 182, 212, 0.15); }
+    .ultra-border { border-left: 4px solid #f43f5e; box-shadow: 0 0 20px rgba(244, 63, 94, 0.2); }
+
+    /* Lüks URL Giriş Kutusu */
+    .stTextInput input {
+        background-color: rgba(18, 18, 26, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        color: #ffffff !important;
+        border-radius: 14px !important;
+        padding: 16px !important;
+        font-size: 16px !important;
+    }
+    .stTextInput input:focus {
+        border-color: #ff416c !important;
+        box-shadow: 0 0 15px rgba(255, 65, 108, 0.3) !important;
+    }
+
+    /* Animasyonlu / Parlar Dev Başlat Butonu */
+    .stButton > button { 
+        width: 100% !important; 
+        height: 56px !important; 
+        border-radius: 14px !important; 
+        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%) !important; 
+        color: white !important; 
+        border: none !important; 
+        font-weight: 800 !important; 
+        font-size: 18px !important; 
+        letter-spacing: 1px !important;
+        box-shadow: 0 10px 30px rgba(255, 65, 108, 0.4) !important;
+        transition: all 0.3s ease !important;
+    }
+    .stButton > button:hover { 
+        transform: translateY(-3px) !important; 
+        box-shadow: 0 15px 35px rgba(255, 65, 108, 0.6) !important; 
     }
     </style>
 """, unsafe_allow_html=True)
