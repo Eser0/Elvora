@@ -134,7 +134,7 @@ if process_btn:
         status = st.empty()
         progress = st.progress(0)
         
-                   try:
+try:
             # 1. Eski dosyaları temizle
             for f in ["analiz.mp3", "indirilen_video.mp4", "elvora_final.mp4"]:
                 if os.path.exists(f): 
