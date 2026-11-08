@@ -134,7 +134,8 @@ if process_btn:
         status = st.empty()
         progress = st.progress(0)
         
-        try:
+              try:
+            # 1. Eski dosyaları temizle
             for f in ["analiz.mp3", "indirilen_video.mp4", "elvora_final.mp4"]:
                 if os.path.exists(f): 
                     os.remove(f)
@@ -142,47 +143,55 @@ if process_btn:
             status.markdown(f"🧬 **{user_tier}** motoru devrede. AI videoyu dinliyor...")
             progress.progress(15)
             
-            with yt_dlp.YoutubeDL({'format': 'bestaudio/best', 'outtmpl': 'analiz', 'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3'}]}) as ydl:
+            # Ses indirme (403 Engeline takılmayan yeni ayarlarla)
+            ses_opts = {
+                'format': 'bestaudio/best', 
+                'outtmpl': 'analiz', 
+                'postprocessors': [{'key': 'FFmpegExtractAudio', 'preferredcodec': 'mp3'}],
+                'nocheckcertificate': True,
+                'quiet': True,
+                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'extractor_args': {'youtube': {'player_client': ['android', 'web']}}
+            }
+            with yt_dlp.YoutubeDL(ses_opts) as ydl:
                 ydl.download([url])
             
             status.markdown(f"📥 **{quality}p** görüntü akışı indiriliyor...")
             progress.progress(45)
 
-    try:
-        ydl_opts = {
-            'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
-            'outtmpl': 'indirilen_video.mp4',
-            'nocheckcertificate': True,
-            'ignoreerrors': False,
-            'logtostderr': False,
-            'quiet': True,
-            'no_warnings': True,
-            'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            'extractor_args': {
-                'youtube': {
-                    'player_client': ['android', 'web']
+            # Video indirme (403 Engeline takılmayan yeni ayarlarla)
+            ydl_opts = {
+                'format': 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best',
+                'outtmpl': 'indirilen_video.mp4',
+                'nocheckcertificate': True,
+                'ignoreerrors': False,
+                'logtostderr': False,
+                'quiet': True,
+                'no_warnings': True,
+                'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                'extractor_args': {
+                    'youtube': {
+                        'player_client': ['android', 'web']
+                    }
                 }
             }
-        }
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([video_url])
-            
-    except Exception as e:
-        st.error(f"Sistem Hatası: {e}")
-            
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 ydl.download([url])
 
             status.markdown(f"✂️ **{user_tier}** dikey kadrajlama ve render yapılıyor...")
             progress.progress(75)
             
+            # FFmpeg ile dikey kırpma ve render
             subprocess.run([
-                'ffmpeg', '-i', 'indirilen_video.mp4',
+                'ffmpeg', '-y', '-i', 'indirilen_video.mp4',
                 '-vf', 'crop=ih*(9/16):ih',
-                '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', crf,
+                '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', str(crf),
                 '-threads', str(threads),
                 '-c:a', 'copy', 'elvora_final.mp4'
             ])
+
+        except Exception as e:
+            st.error(f"Sistem Hatası: {e}")
 
             progress.progress(100)
             status.success(f"🎬 {user_tier} ile işleminiz başarıyla tamamlandı!")
