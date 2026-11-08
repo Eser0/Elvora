@@ -199,7 +199,7 @@ if process_btn:
                     st.video("elvora_final.mp4")
                         
                     with open("elvora_final.mp4", "rb") as f:
-                st.download_button(
+        st.download_button(
                     label=f"📥 {quality}p OLARAK CİHAZA İNDİR",
                     data=f,
                     file_name=f"elvora_{user_tier.split()[1].lower()}.mp4",
