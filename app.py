@@ -1,281 +1,113 @@
 import streamlit as st
-import yt_dlp
-import os
-import subprocess
+import time
 
-# --- SAYFA YAPISI ---
+# --- SAYFA AYARLARI ---
 st.set_page_config(
-    page_title="Elvora AI | Next-Gen Video Engine", 
-    page_icon="⚡", 
-    layout="wide",
-    initial_sidebar_state="collapsed"
+    page_title="Eser & Nisa 💖",
+    page_icon="🌹",
+    layout="centered"
 )
 
-# --- LUXURY SAAS & NETFLIX TARZI ÖZEL STİLLER ---
+# --- ÖZEL TASARIM VE ROMANTİK STİLLER (CSS) ---
 st.markdown("""
     <style>
-    /* Arka Plan */
-    .stApp { 
-        background: radial-gradient(circle at 50% -20%, #1a1a2e 0%, #08080c 60%, #030305 100%);
-        color: #f8fafc; 
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    /* Navbar */
-    .nav-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 15px 30px;
-        background: rgba(15, 15, 20, 0.75);
-        backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        margin-bottom: 40px;
-    }
-    .logo-text {
-        font-size: 26px;
-        font-weight: 900;
-        background: linear-gradient(135deg, #fff 0%, #ff416c 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-
-    /* Başlıklar */
-    .hero-title { 
-        font-size: 52px; 
-        font-weight: 900; 
+    .main {
+        background: linear-gradient(135deg, #1a001a, #4d0039, #1f0033);
         color: #ffffff;
-        letter-spacing: -1.5px;
-        line-height: 1.1;
-        margin-bottom: 15px;
-        text-align: center;
     }
-    .hero-title span {
-        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 50%, #ffa400 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .hero-desc {
+    h1 {
         text-align: center;
-        color: #94a3b8; 
+        color: #ff3399;
+        font-family: 'Courier New', Courier, monospace;
+        text-shadow: 0px 0px 15px rgba(255, 51, 153, 0.7);
+    }
+    h2, h3 {
+        text-align: center;
+        color: #ff99cc;
+    }
+    p, li {
         font-size: 18px;
-        max-width: 700px;
-        margin: 0 auto 40px auto;
+        color: #f2f2f2;
+        line-height: 1.6;
     }
-
-    /* Modern Giriş ve Butonlar */
-    .stTextInput input {
-        background-color: #12121a !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        color: #ffffff !important;
-        border-radius: 16px !important;
-        padding: 18px !important;
-        font-size: 16px !important;
+    .romantic-card {
+        background-color: rgba(255, 255, 255, 0.07);
+        padding: 35px;
+        border-radius: 25px;
+        border: 2px solid rgba(255, 51, 153, 0.4);
+        box-shadow: 0 0 30px rgba(255, 51, 153, 0.3);
+        margin-bottom: 25px;
     }
-    .stButton > button { 
-        background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%) !important; 
-        color: white !important; 
-        border-radius: 16px !important; 
-        height: 56px !important; 
-        font-weight: 800 !important;
-        font-size: 16px !important;
-        border: none !important;
-        box-shadow: 0 10px 25px rgba(255, 65, 108, 0.4);
-        width: 100% !important;
+    .highlight {
+        color: #ff3399;
+        font-weight: bold;
     }
-    .stButton > button:hover {
-        transform: translateY(-3px) !important;
-        box-shadow: 0 15px 35px rgba(255, 65, 108, 0.6) !important;
-    }
-    
-    /* Sekme Tasarımı */
-    .stRadio > div {
-        background: rgba(20, 20, 28, 0.8);
-        padding: 10px;
-        border-radius: 16px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        display: flex;
-        justify-content: center;
+    .names-title {
+        text-align: center;
+        font-size: 28px;
+        color: #00ffcc;
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 0px 0px 10px rgba(0, 255, 204, 0.5);
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- ÜST NAVBAR ---
+# --- OTURUM (STATE) YÖNETİMİ ---
+if 'cevap_verdi' not in st.session_state:
+    st.session_state.cevap_verdi = False
+
+# --- BAŞLIK BÖLÜMÜ ---
+st.markdown("<h1>🌹 Nisa İçin Özel Bir Yolculuk... 🌹</h1>", unsafe_allow_html=True)
+st.markdown("<div class='names-title'>✨ Eser & Nisa ✨</div>", unsafe_allow_html=True)
+st.write("")
+
+# --- GİRİŞ / HİKAYE BÖLÜMÜ ---
 st.markdown("""
-    <div class="nav-bar">
-        <div class="logo-text">⚡ ELVORA AI</div>
-        <div style="color: #94a3b8; font-size: 14px; font-weight: 600;">Next-Gen Video Suite v3.3</div>
+    <div class="romantic-card">
+        <h2>Neden Bu Siteyi Açtın? diyebilirsin Nisa...</h2>
+        <p>Bazen sıradan kelimeler insanın içindekileri anlatmaya yetmez. Ben <span class="highlight">Eser</span> olarak; senin gülüşünü, bakışını ve hayatıma kattığın o güzel huzuru ölümsüzleştirmek istedim.</p>
+        <p>Sadece senin görebileceğin, tamamen kalbimin ortasından kopup gelen bu dijital dünyayı sırf senin için kurdum. İyi ki bu hayattasın, iyi ki yollarımız kesişti Nisa'm.</p>
     </div>
 """, unsafe_allow_html=True)
 
-# Sekme Seçimi
-selected_tab = st.radio(
-    "", 
-    ["🏠 Ana Sayfa", "✂️ Shorts Kesici", "💎 Üyelik Planları"],
-    horizontal=True,
-    label_visibility="collapsed"
-)
-
-st.write("")
-st.write("")
-
-# ==========================================================
-# 1. BÖLÜM: ANA SAYFA
-# ==========================================================
-if selected_tab == "🏠 Ana Sayfa":
-    st.markdown("<div class='hero-title'>YouTube Videolarını <br><span>Yapay Zeka ile</span> Kırpın</div>", unsafe_allow_html=True)
-    st.markdown("<div class='hero-desc'>Uzun videolarınızı saniyeler içinde viral TikTok, Reels ve Shorts kliplerine dönüştürün.</div>", unsafe_allow_html=True)
+# --- NİSA İÇİN ÖZEL SEVİYE / ANKET KISMI ---
+if not st.session_state.cevap_verdi:
+    st.markdown("""
+        <div class="romantic-card" style="text-align: center;">
+            <h3>Şimdi karşında çok kritik bir soru var Nisa... 🥺</h3>
+            <p style="font-size: 20px; color: #ffb3d9;"><b>Eser'in kalbine boydan boya yerleşmeye ve bu güzel hikayeyi birlikte yazmaya var mısın?</b></p>
+        </div>
+    """, unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.info("🚀 **01. Bağlantı**\n\nYouTube linkini sisteme girin, saniyeler içinde işleme başlasın.")
+    col1, col2, col3 = st.columns([1, 2, 1])
+    
     with col2:
-        st.info("🧬 **02. AI Analiz**\n\nYapay zeka en heyecanlı anları otomatik tespit eder.")
-    with col3:
-        st.info("📥 **03. Dikey İndir**\n\n9:16 kusursuz kadrajlanmış Shorts klibini anında cihazına al.")
+        if st.button("EVET, VARIM! 💖", use_container_width=True):
+            st.session_state.cevap_verdi = True
+            st.rerun()
+            
+        if st.button("Düşünmem lazım... 🤔", use_container_width=True):
+            st.warning("Düşünmene gerek yok bence Nisa, kalbine sor o zaten cevabı biliyor 😉 Sadece Eser'e bak yeter!")
 
-# ==========================================================
-# 2. BÖLÜM: SHORTS KESİCİ (BEYİN)
-# ==========================================================
-elif selected_tab == "✂️ Shorts Kesici":
-    st.markdown("<div class='hero-title'><span>Shorts Kesici</span> Motoru</div>", unsafe_allow_html=True)
-    st.markdown("<div class='hero-desc'>YouTube bağlantısını yapıştırın, arka plandaki yapay zeka ve FFmpeg motoru sizin için dikey klibi hazırlasın.</div>", unsafe_allow_html=True)
-
-    col_a, col_b, col_c = st.columns([1, 2, 1])
-    with col_b:
-        url = st.text_input("", placeholder="https://www.youtube.com/watch?v=...")
-        st.write("")
-        process_btn = st.button("🚀 SİHRİ BAŞLAT")
-
-    if process_btn:
-        if url:
-            with col_b:
-                status = st.empty()
-                progress = st.progress(0)
-                
-                try:
-                    # 1. Eski kalıntı dosyaları temizle
-                    for f in os.listdir("."):
-                        if f.startswith("indirilen_video") or f == "elvora_final.mp4":
-                            try: os.remove(f)
-                            except: pass
-
-                    status.markdown("🧬 **Elvora AI** YouTube videosunu indiriyor...")
-                    progress.progress(25)
-                    
-                    # Garantili YouTube indirme ayarları
-                    ydl_opts = {
-                        'format': 'best[ext=mp4]/best', 
-                        'outtmpl': 'indirilen_video.%(ext)s', 
-                        'nocheckcertificate': True, 
-                        'no_warnings': True,
-                        'user_agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-                        'extractor_args': {'youtube': {'player_client': ['android', 'web']}}
-                    }
-                    
-                    with yt_dlp.YoutubeDL(ydl_opts) as ydl: 
-                        ydl.download([url])
-
-                    # İndirilen dosyayı uzantısı ne olursa olsun otomatik bul (.mp4, .webm vs.)
-                    girdi_dosyasi = None
-                    for f in os.listdir("."):
-                        if f.startswith("indirilen_video"):
-                            girdi_dosyasi = f
-                            break
-
-                    if not girdi_dosyasi:
-                        st.error("İndirme Hatası: YouTube videosu sunucuya indirilemedi. Lütfen farklı bir YouTube linki deneyin.")
-                    else:
-                        status.markdown("✂️ 9:16 Dikey kadrajlama yapılıyor...")
-                        progress.progress(70)
-                        
-                        # FFmpeg ile garantili dikey kırpma
-                        ffmpeg_cmd = [
-                            'ffmpeg', '-y', '-i', girdi_dosyasi,
-                            '-vf', 'crop=w=2*floor(ih*(9/16)/2):h=ih',
-                            '-c:v', 'libx264', '-pix_fmt', 'yuv420p', '-preset', 'ultrafast', '-crf', '22',
-                            '-c:a', 'aac', 'elvora_final.mp4'
-                        ]
-                        
-                        result = subprocess.run(ffmpeg_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-
-                        if os.path.exists("elvora_final.mp4") and os.path.getsize("elvora_final.mp4") > 0:
-                            progress.progress(100)
-                            status.success("✨ Shorts klibiniz başarıyla hazırlandı!")
-                            st.video("elvora_final.mp4")
-                            
-                            with open("elvora_final.mp4", "rb") as f:
-                                st.download_button("📥 KLIBI CIHAZA İNDİR", f, "elvora_shorts.mp4", mime="video/mp4")
-                        else:
-                            st.error("Render Hatası: FFmpeg dikey videoyu oluşturamadı.")
-                            if result.stderr:
-                                st.code(result.stderr[-400:])
-
-                except Exception as e:
-                    st.error(f"Sistem Hatası: {e}")
-        else:
-            with col_b:
-                st.warning("⚠️ Lütfen geçerli bir YouTube video bağlantısı girin.")
-
-# ==========================================================
-# 3. BÖLÜM: ÜYELİK PLANLARI (KUSURSUZ YAN YANA KARTLAR)
-# ==========================================================
-elif selected_tab == "💎 Üyelik Planları":
-    st.markdown("<div class='hero-title'>Kendinize Uygun <span>Bir Plan Seçin</span></div>", unsafe_allow_html=True)
-    st.markdown("<div class='hero-desc'>İçerik üretim hızınızı artıracak profesyonel paketler.</div>", unsafe_allow_html=True)
+else:
+    # --- KUTLAMA VE AŞK İLANI EKRANI ---
+    st.markdown("""
+        <div class="romantic-card" style="border-color: #00ffcc; box-shadow: 0 0 40px rgba(0, 255, 204, 0.5); text-align: center;">
+            <h1 style="color: #00ffcc;"> DÜNYANIN EN GÜZEL CEVABI! ✨</h1>
+            <h2>İyi ki varsın Nisa'm...</h2>
+            <p>Bundan sonra her günümüz, her anımız bu site kadar özel ve güzel olsun. Seni kalbimin en derin köşesinde taşıyorum. Eser seninle çok ama çok mutlu! ❤️</p>
+        </div>
+    """, unsafe_allow_html=True)
     
-    st.write("")
-    
-    col1, col2, col3 = st.columns(3)
-    
-    # 1. KART: NANO
-    with col1:
-        with st.container(border=True):
-            st.markdown("### Nano (Temel)")
-            st.caption("720p Standart Kalite")
-            st.markdown("## **$4.99** <span style='font-size:12px; color:#94a3b8;'>/ ay</span>", unsafe_allow_html=True)
-            st.markdown("<div style='background:rgba(255,65,108,0.1); color:#ff416c; padding:6px; border-radius:8px; text-align:center; font-weight:bold; font-size:13px;'>🎉 İLK 1 AY ÜCRETSİZ</div>", unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("""
-                * Günlük 2 Video Hakkı
-                * 720p HD Çözünürlük
-                * 30 Saniye Süre Sınırı
-                * Standart İşlemci Hızı
-            """)
-            if st.button("Nano Seç", key="p1"):
-                st.success("Nano planı seçildi!")
+    # Kutlama efektleri
+    st.balloons()
+    st.snow()
 
-    # 2. KART: FLASH (EN POPÜLER)
-    with col2:
-        with st.container(border=True):
-            st.markdown("<div style='background:linear-gradient(135deg, #ff416c, #ff4b2b); color:white; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold; text-align:center;'>EN ÇOK TERCİH EDİLEN</div>", unsafe_allow_html=True)
-            st.markdown("### Flash (Standard)")
-            st.caption("1080p Yüksek Kalite")
-            st.markdown("## **$10.99** <span style='font-size:12px; color:#94a3b8;'>/ ay</span>", unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("""
-                * Sınırsız Video Hakkı
-                * 1080p Tam HD Kalite
-                * 60 Saniye Süre Sınırı
-                * Öncelikli Hızlı Render
-            """)
-            if st.button("Flash Seç", key="p2"):
-                st.success("Flash planı seçildi!")
-
-    # 3. KART: ULTRA VIP (%35 İNDİRİMLİ)
-    with col3:
-        with st.container(border=True):
-            st.markdown("<div style='background:#06b6d4; color:white; padding:4px 10px; border-radius:20px; font-size:11px; font-weight:bold; text-align:center;'>%35 İNDİRİMLİ</div>", unsafe_allow_html=True)
-            st.markdown("### Premium (Ultra VIP)")
-            st.caption("4K + HDR / Maksimum Güç")
-            st.markdown("## **$15.99** <span style='font-size:12px; color:#ff416c; text-decoration:line-through;'>$24.99</span>", unsafe_allow_html=True)
-            st.markdown("<br>", unsafe_allow_html=True)
-            st.markdown("""
-                * Sınırsız Öncelikli Hak
-                * 4K Ultra Kalite Desteği
-                * 90 Saniye Süre Sınırı
-                * Maksimum AI İşlemci Gücü
-            """)
-            if st.button("VIP Seç", key="p3"):
-                st.success("Ultra VIP planı seçildi!")
+# --- ALT NOT / UZUN ROMANTİK DETAY ---
+st.write("---")
+st.markdown("""
+    <div style="text-align: center; color: #b3b3b3; font-size: 15px;">
+        <p>Bu site <span style="color: #ff3399;">Eser</span> tarafından <span style="color: #ff3399;">Nisa</span>'nın kalbini kazanmak için aşkla kodlanmıştır. 💘</p>
+    </div>
+""", unsafe_allow_html=True)
